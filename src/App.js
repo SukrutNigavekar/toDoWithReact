@@ -17,6 +17,19 @@ function App() {
     setAllList(copyData);
     setTodo("");
   };
+  let deleteRow = (index) => {
+    let allItems = [...allToDoList];
+    allItems.splice(index, 1);
+
+    localStorage.setItem("toDoList", JSON.stringify(allItems));
+    setAllList(allItems);
+  };
+  let changeStatus = (index)=>{
+    let allItems = [...allToDoList];
+    allItems[index]['toDoStatus']= !allItems[index]['toDoStatus'];
+    localStorage.setItem("toDoList", JSON.stringify(allItems));
+    setAllList(allItems);
+  }
   return (
     <>
       <div className=" ">
@@ -27,7 +40,7 @@ function App() {
           <input
             type="text"
             placeholder="Enter your task"
-            className="basis-[400px] text-[20px] p-4 border border-red-600"
+            className="basis-[400px] text-[20px] p-4 border border-blue-600 "
             value={todo}
             onChange={(e) => setTodo(e.target.value)}
           />
@@ -35,6 +48,36 @@ function App() {
             Add todo
           </button>
         </form>
+
+        <div className="w-[700px] mx-auto px-10">
+          <div>
+            <ul className="w-full text-[20px]">
+              {allToDoList.length >= 1
+                ? allToDoList.map((v, i) => {
+                    return (
+                      <li
+                        className={`flex justify-between items-center p-4 my-3
+               bg-red-600 rounded text-white  ${(v.toDoStatus)?'line-through bg-green-600':''}`}
+                        key={i}
+                      >
+                        <span className="cursor-pointer" onClick={()=>changeStatus(i)}>
+                          {i + 1}. {v.todoName}
+                        </span>
+                        <span>
+                          <button
+                            className="bg-blue-600 text-white p-3 rounded"
+                            onClick={() => deleteRow(i)}
+                          >
+                            Delete
+                          </button>
+                        </span>
+                      </li>
+                    );
+                  })
+                : ""}
+            </ul>
+          </div>
+        </div>
       </div>
     </>
   );
